@@ -615,8 +615,6 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.70.6)
   - Firebase (9.6.0):
     - Firebase/Core (= 9.6.0)
-  - Firebase/Analytics (9.6.0):
-    - Firebase/Core
   - Firebase/Core (9.6.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (~> 9.6.0)
@@ -1160,12 +1158,8 @@ PODS:
     - React-jsi (= 0.70.6)
     - React-logger (= 0.70.6)
     - React-perflogger (= 0.70.6)
-  - RealmJS (11.3.2):
-    - React
-  - RNFBAnalytics (15.7.0):
-    - Firebase/Analytics (= 9.6.0)
+  - RNCAsyncStorage (1.18.1):
     - React-Core
-    - RNFBApp
   - RNFBApp (15.7.0):
     - Firebase/CoreOnly (= 9.6.0)
     - React-Core
@@ -1275,8 +1269,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - RealmJS (from `../node_modules/realm`)
-  - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -1391,10 +1384,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  RealmJS:
-    :path: "../node_modules/realm"
-  RNFBAnalytics:
-    :path: "../node_modules/@react-native-firebase/analytics"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBFirestore:
@@ -1475,8 +1466,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: c75ceef7aa60a33b2d5731ebe5800ddde40cefc4
   React-runtimeexecutor: 15437b576139df27635400de0599d9844f1ab817
   ReactCommon: 349be31adeecffc7986a0de875d7fb0dcf4e251c
-  RealmJS: 8dba7c09a0d3176bc09c22e461034127b5fa35de
-  RNFBAnalytics: 9b5790e2b3d96c11ae1c02be6430e778f11801ed
+  RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNFBApp: c3c9e694e9d34c14250a069916eb05785c5f3c32
   RNFBFirestore: c5e3014a05a5779237523350ab75c8ef29fe0b41
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
