@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "333451612637",
+    "project_id": "weatherapp-e988c",
+    "storage_bucket": "weatherapp-e988c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333451612637:android:43abe18baee69cb81da634",
+        "android_client_info": {
+          "package_name": "com.weatherforecast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333451612637-vcksmr4puicc7vhnkdn0ip5gvaqo2lc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIRxpoXTqNJCZe10o8QHuchug193F-404"
+        },
+        {
+          "current_key": "AIzaSyDu_HkW-BOiYMNujX3d4Jonow_DuWjatNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333451612637-vcksmr4puicc7vhnkdn0ip5gvaqo2lc7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "333451612637-m46vghf9pfpgkv6cl868nah734tbukbu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.WeatherApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
