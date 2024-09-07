@@ -1,35 +1,18 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import React, {FC} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import {ICustomBottomDrawerTabProps} from '../types/componentType';
 
-const CustomBottomDrawerTab = props => {
+const CustomBottomDrawerTab: FC<ICustomBottomDrawerTabProps> = props => {
   const goToLocationScreen = async () => {
-    //await SaveAsyncStorage('UserLoggedIn', 'false');
-
     props.navigation.navigate('Location Screen', {screen: 'LocationScreen'});
-    props.navigation.closeDrawer();
   };
   return (
     <View style={styles.mainContainer}>
-      <DrawerContentScrollView
-        {...props}
-        contentContainerStyle={styles.contentContainer}>
-        {/* <ImageBackground
-          source={require('../assets/Images/forest_cloudy.png')}
-          style={styles.backgroundStyle}>
-          <Text style={styles.nameTextStyle}>Cloudy</Text>
-          <View style={{flex: 0.8}}></View>
-        </ImageBackground> */}
-
+      <DrawerContentScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.drawerItemListContainer}>
           <DrawerItemList {...props} />
           <View style={styles.scrollContainerStyle}>

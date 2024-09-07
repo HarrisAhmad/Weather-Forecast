@@ -1,11 +1,19 @@
 import {axiosConfig, axiosGeoConfig} from '../configuration/axiosConfig';
-import {API_KEY, APP_ID} from '@env';
+import {API_KEY} from '@env';
+import {
+  IReverseGeocodeResponse,
+  IWeatherDataResponse,
+  IWeatherForecastResponse,
+} from '../types/apiServiceType';
 
 /////////////////////////////////////////////////// CURRENT WEATHER //////////////////////////////////////////////////
 const appid = 'd268608c0ec4e46d1d69f2c404e236b7'; // exposed for demo purpose
 const units = 'Metric';
-export const GetCurrentWeather = async (lat, lon) => {
-  let result = '';
+export const GetCurrentWeather = async (
+  lat: number,
+  lon: number,
+): Promise<IWeatherDataResponse | null> => {
+  let result = null;
   await axiosConfig
     .post('data/2.5/weather', null, {
       params: {
@@ -32,8 +40,11 @@ export const GetCurrentWeather = async (lat, lon) => {
 
 /////////////////////////////////////////////////// FORECAST //////////////////////////////////////////////////
 
-export const GetWeatherForecast = async (lat, lon) => {
-  let result = '';
+export const GetWeatherForecast = async (
+  lat: number,
+  lon: number,
+): Promise<IWeatherForecastResponse | null> => {
+  let result = null;
   await axiosConfig
     .post('data/2.5/forecast', null, {
       params: {
@@ -43,12 +54,9 @@ export const GetWeatherForecast = async (lat, lon) => {
         units,
       },
     })
-
     .then(response => {
+      result = response.data;
       return response;
-    })
-    .then(res => {
-      result = res;
     })
 
     .catch(error => {
@@ -60,8 +68,11 @@ export const GetWeatherForecast = async (lat, lon) => {
 
 //////////////////////////////// REVERSE GEOCODE ///////////////////////////////////////////////////////////
 
-export const GetReverseGeocode = async (lat, lon) => {
-  let result = '';
+export const GetReverseGeocode = async (
+  lat: string,
+  lon: string,
+): Promise<IReverseGeocodeResponse | null> => {
+  let result = null;
   await axiosGeoConfig
     .post('reverse', null, {
       params: {
@@ -73,12 +84,9 @@ export const GetReverseGeocode = async (lat, lon) => {
     })
 
     .then(response => {
-      return response;
+      result = response.data;
+      return result;
     })
-    .then(res => {
-      result = res;
-    })
-
     .catch(error => {
       console.log(error);
     });

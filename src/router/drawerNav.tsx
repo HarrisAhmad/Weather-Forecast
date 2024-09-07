@@ -1,11 +1,14 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerNavigationProp,
+} from '@react-navigation/drawer';
 import HomeScreen from '../screens/homeScreen';
 import LocationScreen from '../screens/locationScreen';
 import CustomBottomDrawerTab from '../components/customBottomDrawerTab';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerFlow = props => {
+const DrawerFlow = () => {
   return (
     <Drawer.Navigator
       initialRouteName="Home"
@@ -20,7 +23,6 @@ const DrawerFlow = props => {
         component={LocationScreen}
         options={{
           drawerItemStyle: {height: 0},
-          headerBackTitleVisible: true,
           title: '',
           headerShown: true,
         }}
