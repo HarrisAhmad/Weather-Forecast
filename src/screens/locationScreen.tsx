@@ -1,24 +1,29 @@
-import React, {useState, useEffect, useRef} from 'react';
-import firestore from '@react-native-firebase/firestore';
+import React, {useState, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import firestore, {doc} from '@react-native-firebase/firestore';
 import {GetReverseGeocode} from '../services/apiService';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {IAddressProps, IReverseGeocodeResponse} from '../types/apiServiceType';
+import {IFireStoreLocationDataProps} from '../types/screenTypes';
 
 const LocationScreen = () => {
-  const [locationList, setLocationlist] = useState(null);
-  const coords = useRef(null);
+  const [locationList, setLocationlist] = useState<IAddressProps[]>([]);
   const usersCollection = firestore().collection('WeatherForecast');
   let addressArray = [];
-  useEffect(() => {
-    getUserLocation();
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserLocation();
+    }, []),
+  );
 
   const getUserLocation = async () => {
-    let dataArray = [];
+    let dataArray: IFireStoreLocationDataProps[] = [];
 
-    await usersCollection.get().then(data => {
-      data.forEach(docSnapshot => {
-        dataArray.push(docSnapshot.data());
-      });
+    // Fetching data from firestore
+    const locationData = await usersCollection.get();
+    locationData.forEach(docSnapshot => {
+      dataArray.push(docSnapshot.data() as IFireStoreLocationDataProps); // Type casting
     });
 
     for (let i = 0; i < dataArray.length; i++) {
@@ -26,18 +31,20 @@ const LocationScreen = () => {
         dataArray[i].Latitude,
         dataArray[i].Longitude,
       );
-      let addressObj = {
-        id: dataArray[i].ID,
-        state: result.data.address.state,
-        town: result.data.address.town,
-      };
-      addressArray.push(addressObj);
+      if (result !== null) {
+        let addressObj = {
+          id: dataArray[i].ID,
+          state: result.address.state,
+          town: result.address.town,
+        };
+        addressArray.push(addressObj);
+      }
+      console.log(addressArray);
+      setLocationlist(addressArray);
     }
-    console.log(addressArray);
-    setLocationlist(addressArray);
   };
 
-  const renderItem = item => {
+  const renderItem = (item: IAddressProps) => {
     return (
       <View style={styles.addressListContainer}>
         <Text style={styles.addressTextStyle}>
@@ -55,9 +62,9 @@ const LocationScreen = () => {
     <View style={styles.mainConatiner}>
       <View style={styles.addressConatiner}>
         <FlatList
-          style={{flex: 1}}
+          style={styles.mainConatiner}
           data={locationList}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item, index) => item + index.toString()}
           renderItem={({item}) => renderItem(item)}
           ItemSeparatorComponent={renderSeparator}
         />

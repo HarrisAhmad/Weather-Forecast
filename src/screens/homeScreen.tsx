@@ -1,5 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, FC} from 'react';
 import {
+  Alert,
   View,
   FlatList,
   Image,
@@ -9,36 +10,38 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
+import {DrawerActions} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 
-import {requestLocationPermission} from '../services/locationService';
+import {requestLocationPermission} from '../common/commonFunctions';
 import {GetCurrentWeather, GetWeatherForecast} from '../services/apiService';
 
 import LoadingIndicator from '../components/loadingIndicator';
 import hexColors from '../assets/colors/hexColors';
-import {
-  GetDate,
-  SaveAsyncStorage,
-  GetAsyncStorageData,
-} from '../common/commonFunctions';
+import {SaveAsyncStorage, GetAsyncStorageData} from '../common/commonFunctions';
+import {DeviceHeight, DeviceWidth} from '../utils/constants';
+import {IScreenProps, IWeatherDataArrayProps} from '../types/screenTypes';
+import {IWeatherForecastResponse, IWeatherProps} from '../types/apiServiceType';
 
-const HomeScreen = props => {
-  const [isLoading, setisLoading] = useState(true);
-  const [permission, setPermission] = useState(false);
+const HomeScreen: FC<IScreenProps> = ({navigation}) => {
+  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [permission, setPermission] = useState<boolean>(false);
   const [location, setLocation] = useState(false);
-  const [forecast, setForecast] = useState(null);
-  const [favourite, setFavourite] = useState(false);
-  const [appbackgroundColor, setBackgorundColor] = useState(hexColors.sunny);
+  const [forecast, setForecast] = useState<IWeatherDataArrayProps[]>([]);
+  const [favourite, setFavourite] = useState<boolean>(false);
+  const [appbackgroundColor, setBackgorundColor] = useState<string>(
+    hexColors.sunny,
+  );
   const [weatherImage, setWeatherImage] = useState(
     require('../assets/Images/forest_sunny.png'),
   );
 
-  const lat = useRef(null);
-  const long = useRef(null);
-  const weatherType = useRef(null);
-  const mainTemp = useRef(null);
-  const minTemp = useRef(null);
-  const maxTemp = useRef(null);
+  const lat = useRef<number>(0);
+  const long = useRef<number>(0);
+  const weatherType = useRef<string>('');
+  const mainTemp = useRef<number>(0);
+  const minTemp = useRef<number>(0);
+  const maxTemp = useRef<number>(0);
   const favouriteID = useRef('');
   // Initializing firestore
   const usersCollection = firestore().collection('WeatherForecast');
@@ -1026,35 +1029,22 @@ const HomeScreen = props => {
 
   useEffect(() => {
     displayWeatherForecast();
-
-    // Testing purpose
-    // getCurrentLocation().then(async () => {
-    //   // favouriteID.current = await GetAsyncStorageData('ID');
-    //   mainTemp.current = Math.floor(weatherData.main.temp);
-    //   weatherType.current = weatherData.weather[0].main;
-    //   minTemp.current = Math.floor(weatherData.main.temp_min);
-    //   maxTemp.current = Math.floor(weatherData.main.temp_max);
-    //   changeBackground();
-    //   setisLoading(false);
-    //   filterForecast(forecastData);
-    // });
   }, [permission]);
 
   const displayWeatherForecast = () => {
     getCurrentLocation().then(() => {
-      // GetCurrentWeather(lat.current, long.current);
-      // GetCurrentWeather('-29.5270784', '31.2129082');
       GetCurrentWeather(lat.current, long.current).then(res => {
-        //  console.log('DD' + JSON.stringify(res.data));
-        mainTemp.current = Math.floor(res.data.main.temp);
-        weatherType.current = res.data.weather[0].main;
-        minTemp.current = Math.floor(res.data.main.temp_min);
-        maxTemp.current = Math.floor(res.data.main.temp_max);
-        changeBackground();
+        if (res !== null) {
+          mainTemp.current = Math.floor(res.data.main.temp);
+          weatherType.current = res.data.weather[0].main;
+          minTemp.current = Math.floor(res.data.main.temp_min);
+          maxTemp.current = Math.floor(res.data.main.temp_max);
+          changeBackground();
+        }
       });
       // Getting 5 days forecast
       GetWeatherForecast(lat.current, long.current).then(res => {
-        filterForecast(res.data);
+        if (res !== null) filterForecast(res);
       });
       setisLoading(false);
     });
@@ -1077,41 +1067,36 @@ const HomeScreen = props => {
   const getCurrentLocation = async () => {
     // getting location based on OS
     if (Platform.OS === 'android') {
-      const result = requestLocationPermission();
-      result.then(async res => {
-        if (res) {
-          // if response is true setting display
+      const result = await requestLocationPermission();
 
-          Geolocation.getCurrentPosition(
-            position => {
-              // getting longitude and saving reference
-              long.current = position.coords.longitude.toString();
-
-              //getting the Latitude from the location json
-              lat.current = position.coords.latitude.toString();
-              //  console.log(long.current, lat.current);
-              setPermission(true);
-            },
-            error => {
-              // See error code charts below.
-              console.log(error.code, 'Error ' + error.message);
-              if (error.code == 2) {
-                alert('Please turn on your location');
-              }
-              return error;
-            },
-            {enableHighAccuracy: false, timeout: 5000, maximumAge: 3600000},
-          );
-        }
-      });
+      if (result) {
+        Geolocation.getCurrentPosition(
+          position => {
+            // getting longitude and saving reference
+            long.current = position.coords.longitude;
+            //getting the Latitude from the location json
+            lat.current = position.coords.latitude;
+            //  console.log(long.current, lat.current);
+            setPermission(true);
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, 'Error ' + error.message);
+            if (error.code == 2) {
+              Alert.alert('Please turn on your location');
+            }
+            return error;
+          },
+          {enableHighAccuracy: false, timeout: 5000, maximumAge: 3600000},
+        );
+      }
     } else {
       Geolocation.getCurrentPosition(
         position => {
           // getting longitude and saving reference
-          long.current = position.coords.longitude.toString();
-
+          long.current = position.coords.longitude;
           //getting the Latitude from the location json
-          lat.current = position.coords.latitude.toString();
+          lat.current = position.coords.latitude;
           //  console.log(long.current, lat.current);
           setPermission(true);
         },
@@ -1119,7 +1104,7 @@ const HomeScreen = props => {
           // See error code charts below.
           console.log(error.code, 'Error ' + error.message);
           if (error.code == 2) {
-            alert('Please turn on your location');
+            Alert.alert('Please turn on your location');
           }
           return error;
         },
@@ -1128,14 +1113,14 @@ const HomeScreen = props => {
     }
   };
 
-  const filterForecast = data => {
+  const filterForecast = (data: IWeatherForecastResponse) => {
     let id = 1; // for generating id's for object
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    let weatherdataArray = [];
+    let weatherdataArray: IWeatherDataArrayProps[] = [];
     data.list.map(data => {
       const date = new Date(data.dt_txt);
 
-      dataobj = {
+      const dataobj = {
         id,
         day: days[date.getDay()], // getting days from day array
         temprature: Math.floor(data.main.temp),
@@ -1152,7 +1137,7 @@ const HomeScreen = props => {
     console.log(forecast);
   };
 
-  const addIcons = val => {
+  const addIcons = (val: string) => {
     if (val === 'Clear') {
       return require('../assets/icons/clearxx.png');
     }
@@ -1164,7 +1149,7 @@ const HomeScreen = props => {
     }
   };
 
-  const renderItem = item => {
+  const renderItem = (item: IWeatherDataArrayProps) => {
     return (
       <View style={styles.forecastItemContainer}>
         <View style={styles.forecastRowContainer}>
@@ -1172,10 +1157,7 @@ const HomeScreen = props => {
             <Text style={styles.forecastRowTextStyle}>{item.day}</Text>
           </View>
           <View style={styles.forecastWeatherContainer}>
-            <Image
-              source={addIcons(item.weather)}
-              style={styles.forecastRowTextStyle}
-            />
+            <Image source={addIcons(item.weather)} style={styles.iconStyle} />
           </View>
           <View style={styles.forecastTempratureContainer}>
             <Text style={styles.forecastRowTextStyle}>
@@ -1192,19 +1174,22 @@ const HomeScreen = props => {
 
   const addtoFavourites = async () => {
     const favID = await GetAsyncStorageData('ID');
-    const dataObj = {
-      ID: parseInt(favID) + 1,
-      Latitude: lat.current,
-      Longitude: long.current,
-      PersonID: 1, // We dont have a login or user ID specified for demo its jsut 1
-    };
-    if (!favourite) {
-      // Adding to favourite list and seding to firestore
-      setFavourite(true);
-      usersCollection.add(dataObj);
-      await SaveAsyncStorage('ID', dataObj.ID);
-    } else {
-      setFavourite(false);
+    if (favID !== null) {
+      const dataObj = {
+        ID: parseInt(favID) + 1,
+        Latitude: lat.current,
+        Longitude: long.current,
+        PersonID: 1, // We dont have a login or user ID specified for demo its jsut 1
+      };
+
+      if (!favourite) {
+        // Adding to favourite list and seding to firestore
+        setFavourite(true);
+        usersCollection.add(dataObj);
+        await SaveAsyncStorage('ID', dataObj.ID.toString());
+      } else {
+        setFavourite(false);
+      }
     }
   };
 
@@ -1216,7 +1201,10 @@ const HomeScreen = props => {
             <Image style={styles.weatherImageStyle} source={weatherImage} />
 
             <View style={styles.menuIconContainer}>
-              <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.dispatch(DrawerActions.toggleDrawer())
+                }>
                 <Image
                   style={styles.menuImageStyle}
                   source={require('../assets/icons/menuicon.png')}
@@ -1277,7 +1265,7 @@ const HomeScreen = props => {
           <View style={styles.sepratorStyle} />
           <View style={styles.forecastContainer}>
             <FlatList
-              style={{flex: 1}}
+              style={styles.flatListStyle}
               data={forecast}
               keyExtractor={item => item.id.toString()}
               renderItem={({item}) => renderItem(item)}
@@ -1293,12 +1281,9 @@ const HomeScreen = props => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-  },
-  weatherImageContainer: {
-    flex: 0.5,
-  },
+  mainContainer: {flex: 1},
+  flatListStyle: {flex: 1},
+  weatherImageContainer: {flex: 0.5},
   weatherImageStyle: {
     width: '100%',
     height: '100%',
@@ -1317,7 +1302,11 @@ const styles = StyleSheet.create({
     right: 8,
     backgroundColor: 'transparent',
   },
-  menuImageStyle: {width: 40, height: 40, padding: 5},
+  menuImageStyle: {
+    width: DeviceWidth * 0.099,
+    height: DeviceHeight * 0.05,
+    padding: 5,
+  },
   mainTemp: {
     position: 'absolute',
     left: 0,
@@ -1346,13 +1335,13 @@ const styles = StyleSheet.create({
   },
   tempBar: {
     flex: 0.08,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
   tempBarMinStyle: {
-    flex: 0.4,
     flexDirection: 'column',
+    justifyContent: 'center',
   },
   tempBarMinHeaderStyle: {
     fontSize: 18,
@@ -1360,13 +1349,12 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
   tempBarCurrentStyle: {
-    flex: 0.8,
     flexDirection: 'column',
+    justifyContent: 'center',
   },
   tempBarMaxStyle: {
-    flex: 0.5,
-
     flexDirection: 'column',
+    justifyContent: 'center',
   },
   tempBarCurrentHeaderStyle: {
     fontSize: 18,
@@ -1403,17 +1391,22 @@ const styles = StyleSheet.create({
   forecastRowStyle: {
     flex: 1,
   },
-  forecastDayStyle: {flex: 0.37, paddingLeft: 10},
+  forecastDayStyle: {
+    flex: 0.18,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 10,
+  },
   forecastWeatherContainer: {
-    flex: 0.45,
-    paddingRight: 20,
+    flex: 0.75,
     justifyContent: 'center',
     alignItems: 'center',
   },
   forecastTempratureContainer: {
-    flex: 0.35,
+    flex: 0.2,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 10,
   },
   forecastRowTextStyle: {
     fontSize: 22,
@@ -1421,6 +1414,7 @@ const styles = StyleSheet.create({
     color: hexColors.textColor,
     fontWeight: 'normal',
   },
+  iconStyle: {resizeMode: 'contain'},
 });
 
 export default HomeScreen;
