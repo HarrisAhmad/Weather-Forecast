@@ -69,6 +69,18 @@ Folder called **services** handle the file **ApiServices** which intend to call 
 
 **Assets** handles all different type of assets used in the app.
 
+### Third Party Libraries
+These are the following libraries used in order to make magic happen.
+
+**React Native Async Storage:**
+To store the ID value for the favourite locations and increment next time from reference of previous one.
+
+**Firebase Firestore:**
+To store the favourited location in a noSql database and reterieve it to display saved locations.
+
+**Geo Loacation:**
+Geo location library is used to determine the current position of the user and show current weather and forecast accordingly.
+
 ## What I did!
 
 First of all, for running TypeScript smoothly, I upgraded React Native to 0.73.4. TypeScript was launched as the default from 0.71.0. Then, I converted the JavaScript .js files to .tsx files.
