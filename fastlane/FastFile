@@ -6,7 +6,7 @@ end
 
 platform :android do
     desc "Weather  Forecast"
-    lane :distribute do
+    lane :firebase_deploy do
         gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
           "MYAPP_UPLOAD_STORE_FILE" => ENV["UPLOAD_STORE_FILE"],
           "MYAPP_UPLOAD_STORE_PASSWORD" => ENV["UPLOAD_STORE_PASSWORD"],
