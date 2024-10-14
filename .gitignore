@@ -51,6 +51,8 @@ yarn-error.log
 **/fastlane/Preview.html
 **/fastlane/screenshots
 **/fastlane/test_output
+**/fastlane/FastFlie
+fastlane/FastFlie
 
 # Bundle artifact
 *.jsbundle
@@ -64,3 +66,7 @@ yarn-error.log
 
 # testing
 /coverage
+
+#env
+.env
+fastlane/FastFile
