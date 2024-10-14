@@ -15,10 +15,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
-### android distribute
+### android firebase_deploy
 
 ```sh
-[bundle exec] fastlane android distribute
+[bundle exec] fastlane android firebase_deploy
 ```
 
 Weather  Forecast

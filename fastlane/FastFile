@@ -17,7 +17,7 @@ platform :android do
     firebase_app_distribution(
       app: ENV["APP_ID_FIREBASE"],
       testers: ENV["FIREBASE_TESTERS_GROUPS"],
-      groups: "Testers", # Optional: distribute to groups
+     # groups: "Testers", # Optional: distribute to groups
       firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
       release_notes: "Lots of amazing new features to test out!"
     )
