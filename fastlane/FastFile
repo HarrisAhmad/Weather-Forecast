@@ -6,17 +6,13 @@ end
 
 platform :android do
     desc "Weather  Forecast"
-    desc "Deploy a new version to Firebase App Distribution"
     lane :firebase_deploy do
-    gradle(task: "clean assembleRelease")
-    # Ensure FIREBASE_APP_ID is set in your environment variables
-    if ENV["FIREBASE_APP_ID"].nil?
-      UI.user_error!("FIREBASE_APP_ID environment variable is not set.")
-    end
-    # Ensure FIREBASE_APP_ID is set in your environment variables
-    if ENV["FIREBASE_TOKEN"].nil?
-      UI.user_error!("FIREBASE_TOKEN environment variable is not set.")
-    end
+        gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
+          "MYAPP_UPLOAD_STORE_FILE" => ENV["UPLOAD_STORE_FILE"],
+          "MYAPP_UPLOAD_STORE_PASSWORD" => ENV["UPLOAD_STORE_PASSWORD"],
+          "MYAPP_UPLOAD_KEY_ALIAS" => ENV["UPLOAD_KEY_ALIAS"],
+          "MYAPP_UPLOAD_KEY_PASSWORD" => ENV["UPLOAD_KEY_PASSWORD"]
+        })
 
     firebase_app_distribution(
       app: ENV["APP_ID_FIREBASE"],
