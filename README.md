@@ -1,12 +1,20 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
-
 # Getting Started
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Instructions
 
-## Step 1: Start the Metro Server
+First, you will need to start **Clone**, the project locally:
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+```bash
+# using npm
+npm install
+
+# install cocoapods
+npx pod-install
+
+#OR
+cd ios 
+pod install
+```
 
 To start Metro, run the following command from the _root_ of your React Native project:
 
@@ -42,38 +50,50 @@ npm run ios
 yarn ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### Folder Structure
+Folder called **utils** that has a single file called constants.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Folder in the **src folder**  named **types** which handles the flies for different sections fo the project.
 
-## Step 3: Modifying your App
+Folder called **services** handle the file **ApiServices** which intend to call the endpoints for the app.
 
-Now that you have successfully run the app, let's modify it.
+**Screens** folder to handle all the UI screens.
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+**Router** to handle the navigation of the app.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+**Configuration** handles the base url to call be called from different endpoints.
 
-## Congratulations! :tada:
+**Components** handles the different components used in the app.
 
-You've successfully run and modified your React Native App. :partying_face:
+**Common** handles commonly used functions in the entire app.
 
-### Now what?
+**Assets** handles all different type of assets used in the app.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+### Third Party Libraries
+These are the following libraries used in order to make magic happen.
 
-# Troubleshooting
+**React Native Async Storage:**
+To store the ID value for the favourite locations and increment next time from reference of previous one.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+**Firebase Firestore:**
+To store the favourited location in a noSql database and reterieve it to display saved locations.
 
-# Learn More
+**Geo Loacation:**
+Geo location library is used to determine the current position of the user and show current weather and forecast accordingly.
 
-To learn more about React Native, take a look at the following resources:
+## What I did!
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+First of all, for running TypeScript smoothly, I upgraded React Native to 0.73.4. TypeScript was launched as the default from 0.71.0. Then, I converted the JavaScript .js files to .tsx files.
+
+On the Home Screen, I am requesting the user's permission to allow location access.
+
+Then, I am calling the Geolocation library to get the coordinates and passing them to the API to get the current weather and a 5-day forecast by passing longitude and latitude, and of course, changing the background according to the weather.
+
+There is a favorite button that marks the user's location as a favourite and stores it in a NoSQL database, Firestore, and displays it on the Saved Locations screen, which is accessible from the hamburger menu by opening the drawer.
+
+The Saved Locations screen retrieves the saved longitude and latitude marked as a favourite in the Firestore database and calls the API to get the name of the location using the coordinates.
+
+
+
+
+
