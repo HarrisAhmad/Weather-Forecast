@@ -45,8 +45,8 @@ jobs:
           bundle install
           bundle exec fastlane firebase_deploy
         env:
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_APP_ID: ${{ secrets.APP_ID_FIREBASE }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
 
       - name: Notify Deployment Status
         if: success()
