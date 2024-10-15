@@ -3,8 +3,7 @@ name: Build and Distribute
 on:
   push:
     branches:
-      - develop
-      - main
+      - dev
   schedule:
     - cron: '0 0 * * 1' # Run every Monday at midnight
   workflow_dispatch: # Allow manual trigger
