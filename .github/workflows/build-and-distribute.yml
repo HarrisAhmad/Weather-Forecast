@@ -39,14 +39,23 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3 # Ensure this is up-to-date with Node.js 20 compatibility
 
-      - name: Build and distribute
-        run: |
-          bundle config set --local path 'vendor/bundle'
-          bundle install
-          bundle exec fastlane firebase_deploy
-        env:
-          FIREBASE_APP_ID: ${{ secrets.APP_ID_FIREBASE }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+      # - name: Build and distribute
+      #   run: |
+      #     bundle config set --local path 'vendor/bundle'
+      #     bundle install
+      #     bundle exec fastlane firebase_deploy
+      #   env:
+      #     FIREBASE_APP_ID: ${{ secrets.APP_ID_FIREBASE }}
+      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+       - name: build release 
+         run: ./gradlew assembleRelease
+    - name: upload artifact to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1
+      with:
+        appId: ${{secrets.APP_ID_FIREBASE}}
+        token: ${{secrets.FIREBASE_CLI_TOKEN}}
+        groups: testers
+        file: app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Notify Deployment Status
         if: success()
