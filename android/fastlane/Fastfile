@@ -1,17 +1,8 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
+fastlane_require 'dotenv'
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+before_all do
+  Dotenv.overload('.env')
+end
 
 default_platform(:android)
 
@@ -39,11 +30,11 @@ platform :android do
   desc "Deploy a new version to Firebase App Distribution"
   lane :firebase_deploy do
   gradle(task: "clean assembleRelease")
-  # Ensure FIREBASE_APP_ID is set in your environment variables
+  # Ensure APP_ID_FIREBASE is set in your environment variables
   if ENV["APP_ID_FIREBASE"].nil?
-    UI.user_error!("FIREBASE_APP_ID environment variable is not set.")
+    UI.user_error!("APP_ID_FIREBASE environment variable is not set.")
   end
-  # Ensure FIREBASE_APP_ID is set in your environment variables
+  # Ensure APP_ID_FIREBASE is set in your environment variables
   if ENV["FIREBASE_CLI_TOKEN"].nil?
     UI.user_error!("FIREBASE_CLI_TOKEN environment variable is not set.")
   end
