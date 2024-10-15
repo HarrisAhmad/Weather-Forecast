@@ -1,39 +1,58 @@
-fastlane_require 'dotenv'
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
 
-before_all do
-  Dotenv.overload('.env')
-end
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
 
-# platform :android do
-#     desc "Weather  Forecast"
-#     lane :firebase_deploy do
-#         gradle(task: 'clean assembleRelease', project_dir: './android', print_command: false, properties: {
-#           "MYAPP_UPLOAD_STORE_FILE" => ENV["UPLOAD_STORE_FILE"],
-#           "MYAPP_UPLOAD_STORE_PASSWORD" => ENV["UPLOAD_STORE_PASSWORD"],
-#           "MYAPP_UPLOAD_KEY_ALIAS" => ENV["UPLOAD_KEY_ALIAS"],
-#           "MYAPP_UPLOAD_KEY_PASSWORD" => ENV["UPLOAD_KEY_PASSWORD"]
-#         })
+default_platform(:android)
 
 platform :android do
-    desc "Weather  Forecast"
-    lane :firebase_deploy do
-      gradle(task: "clean assembleRelease")
-      # Ensure FIREBASE_APP_ID is set in your environment variables
-      if ENV["APP_ID_FIREBASE"].nil?
-        UI.user_error!("APP_ID_FIREBASE environment variable is not set.")
-      end
-      # Ensure FIREBASE_APP_ID is set in your environment variables
-      if ENV["FIREBASE_CLI_TOKEN"].nil?
-        UI.user_error!("FIREBASE_CLI_TOKEN environment variable is not set.")
-      end
-
-    firebase_app_distribution(
-      app: ENV["APP_ID_FIREBASE"],
-      testers: ENV["FIREBASE_TESTERS_GROUPS"],
-      groups: "Testers", # Optional: distribute to groups
-      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
-      release_notes: "Lots of amazing new features to test out!"
-    )
-
-    end
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
   end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    upload_to_play_store
+  end
+
+  desc "Deploy a new version to Firebase App Distribution"
+  lane :firebase_deploy do
+  gradle(task: "clean assembleRelease")
+  # Ensure FIREBASE_APP_ID is set in your environment variables
+  if ENV["FIREBASE_APP_ID"].nil?
+    UI.user_error!("FIREBASE_APP_ID environment variable is not set.")
+  end
+  # Ensure FIREBASE_APP_ID is set in your environment variables
+  if ENV["FIREBASE_TOKEN"].nil?
+    UI.user_error!("FIREBASE_TOKEN environment variable is not set.")
+  end
+
+  firebase_app_distribution(
+    app: ENV["APP_ID_FIREBASE"],
+    groups: "Testers", # Optional: distribute to groups
+    release_notes: "Optional release notes", # Optional: add release notes
+    firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"] # Optional: specify if not using default credentials
+  )
+  end
+end
