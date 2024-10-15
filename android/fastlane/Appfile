@@ -1,0 +1,6 @@
+# Appfile for an Android project
+
+package_name("com.weatherforecast")  # Replace with your app's package name
+
+# Firebase App Distribution configuration
+firebase_app_id(ENV['APP_ID_FIREBASE'])  # Fetch the Firebase App ID from environment variables
