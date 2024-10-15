@@ -40,12 +40,12 @@ platform :android do
   lane :firebase_deploy do
   gradle(task: "clean assembleRelease")
   # Ensure FIREBASE_APP_ID is set in your environment variables
-  if ENV["FIREBASE_APP_ID"].nil?
+  if ENV["APP_ID_FIREBASE"].nil?
     UI.user_error!("FIREBASE_APP_ID environment variable is not set.")
   end
   # Ensure FIREBASE_APP_ID is set in your environment variables
-  if ENV["FIREBASE_TOKEN"].nil?
-    UI.user_error!("FIREBASE_TOKEN environment variable is not set.")
+  if ENV["FIREBASE_CLI_TOKEN"].nil?
+    UI.user_error!("FIREBASE_CLI_TOKEN environment variable is not set.")
   end
 
   firebase_app_distribution(
